@@ -58,7 +58,7 @@ unit_con_fac = {"1hr": 3600.0, "day": 1.0}
 # factor to convert input units to precipitation flux per temporal input
 # frequency. With the current setting, hourly data must have input units
 # [kg m-2 s-1] and daily data [mm day-1]
-block_size_max_in = None  # None, 5.0
+block_size_max_in = 2.5  # None, 2.5, 5.0
 # maximal data volume that is read during an opening call (None or value) [GB]
 
 # Important notes:
