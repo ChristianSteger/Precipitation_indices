@@ -1,4 +1,3 @@
-# Precipitation_indices
 Accurate and fast way to compute precipitation indices (temporal mean, maximum daily/hourly precipitation, wet day frequency and percentiles) from climate data organised in yearly blocks of NetCDF files.
 To reduce memory consumption, yearly blocks are processed sequentially and the relevant data is kept in memory. To e.g. compute the 90% percentile, the largest 10% of data of a grid cell is kept in memory
 and sequentially updated. After all yearly blocks have been processed, the percentile is computed via interpolation. This method is identical to apply the function *numpy.percentile()*. Part of the percentile
