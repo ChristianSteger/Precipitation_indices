@@ -1,6 +1,8 @@
 # Precipitation_indices
 Accurate and fast way to compute precipitation indices (temporal mean, maximum daily/hourly precipitation, wet day frequency and percentiles) from climate data organised in yearly blocks of NetCDF files.
-Part of the percentile calculation is parallelised with Numba - the performance of the script depends thus on the available number of CPUs (respectively threads).
+To reduce memory consumption, yearly blocks are processed sequentially and the relevant data is kept in memory. To e.g. compute the 90% percentile, the largest 10% of data of a grid cell is kept in memory
+and sequentially updated. After all yearly blocks have been processed, the percentile is computed via interpolation. This method is identical to apply the function *numpy.percentile()*. Part of the percentile
+calculation is parallelised with Numba – the performance of the script depends thus on the available number of CPUs (respectively threads).
 
 # Package dependencies and installation
 
@@ -19,8 +21,8 @@ The script **python_versus_CDO.py** additional requires the packages Matplotlib 
 
 The folder **comparison** contains Python scripts to compare obtained results with other methods:
 - **precipitation_indices_CDO.sh**: Compute the same precipitation indices with [CDO](https://code.mpimet.mpg.de/projects/cdo/). This methods is approximately ~10 times slower than applying **precipitation_indices.py**
-(depending on the available CPUs/threads). With CDO, percentiles are estimated by sorting the data into discrete bins ([CDO Manual](https://code.mpimet.mpg.de/projects/cdo/embedded/cdo.pdf)). By default, 101 bins are applied.
-To obtain more accurate results, the bin size can be increase with e.g. *export CDO_PCTL_NBINS=1001*.
+(depending on the available CPUs/threads). With CDO, percentiles are estimated by sorting the data into bins (see [CDO Manual](https://code.mpimet.mpg.de/projects/cdo/embedded/cdo.pdf)) to reduce memory consumption.
+By default, 101 bins are applied. To obtain more accurate results, the bin size can be increase with e.g. *export CDO_PCTL_NBINS=1001*.
 - **python_versus_CDO.py**: Compare output from **precipitation_indices.py** with results from the above shell script applying CDO.
 - **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results to a different (but slower) method implemented in Python.
 
