@@ -11,6 +11,8 @@
 # - Ban et al. (2021): The first multi‐model ensemble of regional climate
 #   simulations at kilometer‐scale resolution, part I: evaluation of
 #   precipitation, https://doi.org/10.1007/s00382-021-05708-w
+# - Chinita et al. (2021): Global mean frequency increases of daily and sub-
+#   daily heavy precipitation in ERA5, https://doi.org/10.1088/1748-9326/ac0caa
 # - Schär et al. (2016): Percentile indices for assessing changes in heavy
 #   precipitation events, https://doi.org/10.1007/s10584-016-1669-2
 #
@@ -24,6 +26,7 @@ import time
 import xarray as xr
 import textwrap
 import warnings
+from scipy import interpolate
 
 # Load required functions
 sys.path.append("/Users/csteger/Downloads/Precipitation_indices/")
@@ -58,6 +61,11 @@ unit_con_fac = {"1hr": 3600.0, "day": 1.0}
 # factor to convert input units to precipitation flux per temporal input
 # frequency. With the current setting, hourly data must have input units
 # [kg m-2 s-1] and daily data [mm day-1]
+interp_kind = "linear"
+# interpolation method used to compute percentiles. Either "linear" (linear),
+# "previous" (lower) or "next" (higher). The bracket value indicates the
+# corresponding 'method' in np.percentile(). In Chinita et al. (2021), the
+# method 'higher' is applied (-> see supplementary material)
 block_size_max_in = 2.5  # None, 2.5, 5.0
 # maximal data volume that is read during an opening call (None or value) [GB]
 
@@ -81,6 +89,8 @@ if (qs.min() < 85.0) or (qs.max() > 100.0):
     raise ValueError("Allowed range for qs of [85.0, 100.0] is exceeded")
 if year_subsel not in ("yearly", "JJA", "SON", "DJF", "MAM"):
     raise ValueError("Unknown value for 'year_subsel'")
+if interp_kind not in ("linear", "previous", "next"):
+    raise ValueError("Unknown value for 'interp_kind'")
 
 # Check if all files exist
 print("\n".join(textwrap.wrap(("Process files "
@@ -137,7 +147,7 @@ prec_mean_yr = np.empty((len(years), len_y, len_x), dtype=np.float32)
 prec_max_yr = np.empty((len(years), len_y, len_x), dtype=np.float32)
 ts_above_thresh_yr = np.empty((len(years), len_y, len_x), dtype=np.int32)
 prec_int_yr = np.empty((len(years), len_y, len_x), dtype=np.float32)
-num_keep = (np.ceil(num_ts_tot * (1.0 - qs.min() / 100)) + 1) \
+num_keep = (np.ceil(num_ts_tot * (1.0 - qs.min() / 100.0)) + 1.0) \
     .astype(np.int32)
 prec_keep = np.empty((len_y, len_x, num_keep), dtype=np.float32)
 prec_keep.fill(-999.0)
@@ -281,8 +291,11 @@ if percentile_method == "all":
         raise ValueError("x-position for interpolation is out of range")
     for i in range(len_y):
         for j in range(len_x):
-            prec_per[:, i, j] = np.interp(qs, x[-num_keep:],
-                                          prec_keep[i, j, :])
+            # prec_per[:, i, j] = np.interp(qs, x[-num_keep:],
+            #                               prec_keep[i, j, :])
+            f_ip = interpolate.interp1d(x[-num_keep:], prec_keep[i, j, :],
+                                        bounds_error=True, kind=interp_kind)
+            prec_per[:, i, j] = f_ip(qs)
 else:
     print("Compute wet day precipitation percentiles")
     for i in range(len_y):
@@ -295,10 +308,19 @@ else:
                 if qs.min() < x[-num_keep]:
                     raise ValueError("x-position for interpolation is out of "
                                      + "range")
-                prec_per[:, i, j] = np.interp(qs, x[-num_keep:],
-                                              prec_keep[i, j, :])
+                # prec_per[:, i, j] = np.interp(qs, x[-num_keep:],
+                #                               prec_keep[i, j, :])
+                f_ip = interpolate.interp1d(x[-num_keep:], prec_keep[i, j, :],
+                                            bounds_error=True,
+                                            kind=interp_kind)
+                prec_per[:, i, j] = f_ip(qs)
             else:
-                prec_per[:, i, j] = np.interp(qs, x, prec_keep[i, j, -len(x):])
+                # prec_per[:, i, j] = np.interp(qs, x,
+                #                               prec_keep[i, j, -len(x):])
+                f_ip = interpolate.interp1d(x, prec_keep[i, j, -len(x):],
+                                            bounds_error=True,
+                                            kind=interp_kind)
+                prec_per[:, i, j] = f_ip(qs)
 
 # -----------------------------------------------------------------------------
 # Save precipitation indices to NetCDF file
