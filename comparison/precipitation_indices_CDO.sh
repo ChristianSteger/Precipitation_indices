@@ -7,7 +7,7 @@
 # Settings (files pattern and number of time steps in concatenate files)
 files_pattern="pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-"\
 "crCLIM-v1-1_v1_1hr_????01010030-????12312330.nc"
-num_ts=17544
+num_ts=87672
 
 t_beg=$(date +%s)
 
