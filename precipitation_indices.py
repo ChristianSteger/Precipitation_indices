@@ -217,7 +217,7 @@ for ind, year in enumerate(years):
 
     # Compute wet day frequency
     t_beg = time.time()
-    mask_inc = (prec >= prec_thresh[time_freq_in])
+    mask_inc = (prec > prec_thresh[time_freq_in])
     ts_above_thresh_yr[ind, :, :] = mask_inc.sum(axis=0)
     print("Wet day frequency computed (" + "%.1f" % (time.time() - t_beg)
           + " s)")

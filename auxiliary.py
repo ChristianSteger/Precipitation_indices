@@ -63,7 +63,7 @@ def update_max_values_wet_day(prec_keep, prec, len_y, len_x, num_keep,
     for i in nb.prange(len_y):
         for j in range(len_x):
             mask = (prec[:, i, j] > prec_keep[i, j, 0]) \
-                   & (prec[:, i, j] >= prec_thresh)
+                   & (prec[:, i, j] > prec_thresh)
             prec_keep[i, j, :] \
                 = np.sort(np.append(prec_keep[i, j, :],
                                     prec[mask, i, j]))[-num_keep:]
