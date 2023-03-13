@@ -37,10 +37,10 @@ import auxiliary as aux
 # Settings
 # -----------------------------------------------------------------------------
 
-# Input/Output
-files_pattern = "/Users/csteger/Desktop/data_in/pr_EUR-11_ECMWF-ERAINT_"\
-                + "evaluation_r1i1p1_CLMcom-ETH-COSMO-crCLIM-v1-1_v1_1hr_" \
-                + "YYYY01010030-YYYY12312330.nc"
+# Input/output names
+files_pattern = "/Users/csteger/Dropbox/IAC/Z_current_work/data_in/" \
+                + "pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-" \
+                + "COSMO-crCLIM-v1-1_v1_1hr_YYYY01010030-YYYY12312330.nc"
 # input file pattern -> important: label year(s) with 'YYYY'
 path_out = "/Users/csteger/Desktop/data_out/"  # output directory
 file_out_fp = "pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-" \
@@ -52,7 +52,7 @@ time_freq_in = "1hr"  # temporal input frequency ("1hr" or "day")
 years = np.arange(1979, 1988 + 1)  # considered years 1979 - 1988
 percentile_method = "all"
 # percentile method according to Schär et al. (2016) ("all", "wet")
-qs = np.array([90.0, 95.0, 99.0, 99.9])  # percentiles [0.0, 100.0]
+qs = np.array([90.0, 95.0, 99.0, 99.9])  # percentiles [75.0, 100.0]
 year_subsel = "yearly"
 # temporal subselection for year ("yearly", "JJA", "SON", "DJF", "MAM")
 prec_thresh = {"1hr": 0.1, "day": 1.0}  # [mm]
@@ -85,7 +85,7 @@ if time_freq_in not in ("1hr", "day"):
     raise ValueError("Unknown selected temporal granularity")
 if percentile_method not in ("all", "wet"):
     raise ValueError("Unknown value for 'percentile_method'")
-if (qs.min() < 85.0) or (qs.max() > 100.0):
+if (qs.min() < 75.0) or (qs.max() > 100.0):
     raise ValueError("Allowed range for qs of [85.0, 100.0] is exceeded")
 if year_subsel not in ("yearly", "JJA", "SON", "DJF", "MAM"):
     raise ValueError("Unknown value for 'year_subsel'")
@@ -99,7 +99,7 @@ files = [files_pattern.replace("YYYY", str(i)) for i in years]
 if not all([os.path.isfile(i) for i in files]):
     raise ValueError("Not all input files exist")
 
-# Load ad check metadata from NetCDF
+# Load metadata of NetCDF files
 ds = xr.open_dataset(files[0], decode_times=False)
 if "calendar" in list(ds["time"].attrs):
     mod_cal = ds["time"].calendar
@@ -173,7 +173,7 @@ for ind, year in enumerate(years):
     if block_size_max_in is None:
         ds = xr.open_dataset(file_in)
         if year_subsel != "yearly":
-            ds = ds.sel(time=da["time.season"] == year_subsel)
+            ds = ds.sel(time=ds["time.season"] == year_subsel)
         len_t = ds.coords["time"].size
         prec = ds["pr"].values
         ds.close()
@@ -183,7 +183,7 @@ for ind, year in enumerate(years):
     else:
         ds = xr.open_dataset(file_in)
         if year_subsel != "yearly":
-            ds = ds.sel(time=da["time.season"] == year_subsel)
+            ds = ds.sel(time=ds["time.season"] == year_subsel)
         len_t = ds.coords["time"].size
         ds.close()
         prec = np.empty((len_t, len_y, len_x), dtype=np.float32)
@@ -194,7 +194,7 @@ for ind, year in enumerate(years):
         for i in range(num_blocks):
             ds = xr.open_dataset(file_in)
             if year_subsel != "yearly":
-                ds = ds.sel(time=da["time.season"] == year_subsel)
+                ds = ds.sel(time=ds["time.season"] == year_subsel)
             slice_t = slice(lim[i], lim[i + 1])
             prec[slice_t, :, :] = ds["pr"][slice_t, :, :].values
             ds.close()
@@ -251,8 +251,8 @@ for ind, year in enumerate(years):
         print("Set affected grid cells to NaN")
         num_ts_cons[mask_issue] = np.nan
         # avoid division by 0.0 by setting the grid cells to NaN
-    prec_int_yr[ind, :, :] = np.mean(prec, axis=0) \
-        * (prec.shape[0] / num_ts_cons)
+    prec_int_yr[ind, :, :] = np.sum(prec, axis=0) / num_ts_cons
+
     print("Intensity computed (" + "%.1f" % (time.time() - t_beg) + " s)")
 
 print((" Aggregate statistics over " + str(len(years)) + " years ")
@@ -282,6 +282,7 @@ print("Number of grid cells with intensity of NaN: "
       + str(np.isnan(prec_int).sum()))
 
 # Compute percentiles for entire period
+t_beg = time.time()
 prec_per = np.empty((len(qs), len_y, len_x), dtype=np.float32)
 prec_per.fill(np.nan)
 if percentile_method == "all":
@@ -291,10 +292,9 @@ if percentile_method == "all":
         raise ValueError("x-position for interpolation is out of range")
     for i in range(len_y):
         for j in range(len_x):
-            # prec_per[:, i, j] = np.interp(qs, x[-num_keep:],
-            #                               prec_keep[i, j, :])
             f_ip = interpolate.interp1d(x[-num_keep:], prec_keep[i, j, :],
-                                        bounds_error=True, kind=interp_kind)
+                                        bounds_error=True, kind=interp_kind,
+                                        assume_sorted=True)
             prec_per[:, i, j] = f_ip(qs)
 else:
     print("Compute wet day precipitation percentiles")
@@ -304,23 +304,22 @@ else:
                 continue
             x = np.linspace(0.0, 100.0, ts_above_thresh[i, j],
                             dtype=np.float32)
-            if ts_above_thresh[i, j] >= num_keep:
-                if qs.min() < x[-num_keep]:
-                    raise ValueError("x-position for interpolation is out of "
-                                     + "range")
-                # prec_per[:, i, j] = np.interp(qs, x[-num_keep:],
-                #                               prec_keep[i, j, :])
+            if ts_above_thresh[i, j] == 1:
+                prec_per[:, i, j] = prec_keep[i, j, -1]
+                # emulate the same behaviour as np.percentile() with one value.
+            elif ts_above_thresh[i, j] >= num_keep:
                 f_ip = interpolate.interp1d(x[-num_keep:], prec_keep[i, j, :],
                                             bounds_error=True,
-                                            kind=interp_kind)
+                                            kind=interp_kind,
+                                            assume_sorted=True)
                 prec_per[:, i, j] = f_ip(qs)
             else:
-                # prec_per[:, i, j] = np.interp(qs, x,
-                #                               prec_keep[i, j, -len(x):])
                 f_ip = interpolate.interp1d(x, prec_keep[i, j, -len(x):],
                                             bounds_error=True,
-                                            kind=interp_kind)
+                                            kind=interp_kind,
+                                            assume_sorted=True)
                 prec_per[:, i, j] = f_ip(qs)
+print("Compute percentiles (" + "%.1f" % (time.time() - t_beg) + " s)")
 
 # -----------------------------------------------------------------------------
 # Save precipitation indices to NetCDF file
