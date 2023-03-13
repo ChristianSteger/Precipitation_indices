@@ -13,9 +13,9 @@ conda create -n prec_percentiles -c conda-forge numpy scipy matplotlib netcdf4 x
 
 and **activate this environment**. In the script **precipitation_indices.py**, the path to the script **auxiliary.py** must then be adjusted. Afterwards, **precipitation_indices.py** can be used.
 
-The script **python_versus_CDO.py** additional requires the packages Matplotlib and cartopy for plotting.
+The script **python_versus_CDO.py** additional requires the packages Matplotlib and cartopy for plotting. The script **submit_daint_multithread.sh** allows to submit **precipitation_indices.py** as a job on CSCS cluster Daint.
 
-# Comparison of obtained precipitation indices with other methods.
+# Comparison with different calculation methods.
 
 The folder **comparison** contains Python scripts to compare obtained results with other methods:
 - **precipitation_indices_CDO.sh**: Compute the same precipitation indices with [CDO](https://code.mpimet.mpg.de/projects/cdo/). This methods is approximately ~10 times slower than using **precipitation_indices.py**
