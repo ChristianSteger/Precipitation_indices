@@ -27,7 +27,7 @@ import warnings
 
 # Load required functions
 sys.path.append("/Users/csteger/Downloads/Precipitation_indices/")
-# set to path in which file '' is stored
+# set to path in which file 'auxiliary.py' is stored
 import auxiliary as aux
 
 # -----------------------------------------------------------------------------
