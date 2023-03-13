@@ -213,7 +213,7 @@ for ind, year in enumerate(years):
     # Compute daily/hourly maximum
     t_beg = time.time()
     prec_max_yr[ind, :, :] = prec.max(axis=0)
-    print("Rx1d/h computed (" + "%.1f" % (time.time() - t_beg) + " s)")
+    print("Daily/hourly maximum (" + "%.1f" % (time.time() - t_beg) + " s)")
 
     # Compute wet day frequency
     t_beg = time.time()
@@ -303,7 +303,7 @@ else:
 # -----------------------------------------------------------------------------
 # Save precipitation indices to NetCDF file
 # -----------------------------------------------------------------------------
-print(" Save statistics to NetCDF file".center(79, "#"))
+print(" Save statistics to NetCDF file ".center(79, "#"))
 
 # Processing information and addition to output file name
 if year_subsel == "yearly":
@@ -320,6 +320,7 @@ else:
         + "_" + percentile_method + "_day_perc"
 
 # Save to NetCDF file
+nan_val = -999.0
 ds = xr.open_mfdataset(files[0])
 ds = ds.drop_dims("time")
 ds.attrs["precipitation_indices"] = info
@@ -332,15 +333,22 @@ ds["max"].attrs["long_name"] = year_subsel + " maximum averaged over all years"
 ds["wet_day_freq"] = (out_dim, prec_wet_day_freq)
 ds["wet_day_freq"].attrs["units"] = "-"
 ds["wet_day_freq"].attrs["long_name"] = "wet day frequency"
-ds["intensity"] = (out_dim, prec_int)
+ds["intensity"] = (out_dim, np.nan_to_num(prec_int, nan=nan_val))
 ds["intensity"].attrs["units"] = out_unit[time_freq_in]
 ds["intensity"].attrs["long_name"] = "intensity"
 for ind, q in enumerate(qs):
     name = "perc_%.2f" % q
-    ds[name] = (out_dim, prec_per[ind, :, :])
+    ds[name] = (out_dim, np.nan_to_num(prec_per[ind, :, :], nan=nan_val))
     ds[name].attrs["units"] = out_unit[time_freq_in]
     ds[name].attrs["long_name"] = "%.2f" % q + " " + percentile_method \
                                   + "-day percentile"
-ds.to_netcdf(path_out + file_out_fp + "_" + fn_add + ".nc")
+encoding_nan = {i: {"_FillValue": nan_val} for i in ["intensity"]
+                + ["perc_%.2f" % i for i in qs]}
+encoding_no_nan = {i: {"_FillValue": None} for i in
+                   ["mean", "max", "wet_day_freq"]
+                   + list({"rlon", "rlat", "x", "y", "lon", "lat"}
+                          .intersection(set(ds.variables)))}
+ds.to_netcdf(path_out + file_out_fp + "_" + fn_add + ".nc",
+             encoding=(encoding_nan | encoding_no_nan))
 
 print("Total elapsed time: %.1f" % (time.time() - t_beg_tot) + " s")
