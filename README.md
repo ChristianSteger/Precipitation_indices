@@ -49,7 +49,7 @@ The output from **precipitation_indices.py** is shown in the left and the absolu
 The non-random deviations for *temporal mean* are likely caused by the slight difference in computing the average over the 10 years (in the Python script, the average is weighted by the number of days in a year).
 For the *yearly maximum*, the *wet day frequency* and the *intensity*, the deviations are very small (and random) compared to the actual values.
 For *percentiles*, the deviations are considerably larger and particularly occur in the southern part of the domain (at least for the percentiles in the range of 90% - 99%).
-These deviations originate from two two different computational methods: The Python scripts considers all individual values whereas in CDO, values are temporally aggregated into 1001 bins.
+These deviations originate from two two different computational methods: The Python scripts considers all individual values whereas in CDO, values are temporally aggregated into 1001 bins for computing percentiles.
 
 ![Alt text](https://github.com/ChristianSteger/Media/blob/master/Precipitation_indices_Python_vs_CDO_new.png?raw=true "Output from python_versus_CDO.py")
 
