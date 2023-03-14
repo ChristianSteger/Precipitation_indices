@@ -38,7 +38,7 @@ import auxiliary as aux
 # -----------------------------------------------------------------------------
 
 # Input/output names
-files_pattern = "/Users/csteger/Dropbox/IAC/Z_current_work/data_in/" \
+files_pattern = "/Users/csteger/Desktop/data_in/" \
                 + "pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-" \
                 + "COSMO-crCLIM-v1-1_v1_1hr_YYYY01010030-YYYY12312330.nc"
 # input file pattern -> important: label year(s) with 'YYYY'
