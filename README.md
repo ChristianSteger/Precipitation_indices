@@ -42,6 +42,12 @@ The folder **comparison** contains Python scripts to compare obtained results wi
 By default, 101 bins are applied. To obtain more accurate results, the bin size can be increase with e.g. *export CDO_PCTL_NBINS=1001*.
 
 - **python_versus_CDO.py**: Compare output from **precipitation_indices.py** with results from the above shell script applying CDO.
+The below plot shows the result for the eight precipitation indices where the output from **precipitation_indices.py** is shown in the left and the difference to CDO in the right column.
+The comparably larger difference for *temporal mean* is caused by the slight difference in computing averages over the 10 years (in the Python scrip, the average is weighted by the number of day in a year)
+For the yearly maximum, the wet day frequency and the intensity, the deviations are very small. For percentiles, the deviations are considerably larger and particularly occur in the southern part of the domain
+(at least for the percentiles in the range of 90% - 99%). The differences in the percentiles seems to be caused by the different methods applied to compute them
+(Python: consider all individual values, CDO: bin data in 1001 bins).
+
 ![Alt text](https://github.com/ChristianSteger/Media/blob/master/Precipitation_indices_Python_vs_CDO.png?raw=true "Output from python_versus_CDO.py")
 
 - **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results to a different (but more memory-intensive) method implemented in Python that computes indices for a time series in one step.
