@@ -51,7 +51,7 @@ For the *yearly maximum*, the *wet day frequency* and the *intensity*, the devia
 For *percentiles*, the deviations are considerably larger and particularly occur in the southern part of the domain (at least for the percentiles in the range of 90% - 99%).
 These deviations originate from two two different computational methods: The Python scripts considers all individual values whereas in CDO, values are temporally aggregated into 1001 bins.
 
-![Alt text](https://github.com/ChristianSteger/Media/blob/master/Precipitation_indices_Python_vs_CDO.png?raw=true "Output from python_versus_CDO.py")
+![Alt text](https://github.com/ChristianSteger/Media/blob/master/Precipitation_indices_Python_vs_CDO_new_.png?raw=true "Output from python_versus_CDO.py")
 
 - **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results (apart from numerical errors) compared to a simpler (but less efficient) method in Python 
 that computes indices from unpartitioned time series (e.g. by applying the function *numpy.percentiles()* to compute percentiles).

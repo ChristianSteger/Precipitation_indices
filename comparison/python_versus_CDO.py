@@ -24,7 +24,7 @@ mpl.style.use("classic")
 file_py = "/Users/csteger/Desktop/data_out/" \
           + "pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-" \
           + "crCLIM-v1-1_v1_1hr_1979-1988_all_day_perc.nc"
-files_cdo = ("/Users/csteger/Dropbox/IAC/Z_current_work/data_in/",
+files_cdo = ("/Users/csteger/Desktop/data_in/",
              {"mean": "10ymean_year_mean.nc",
               "max": "10ymean_year_max.nc",
               "wet_day_freq": "10ymean_year_fre.nc",
@@ -76,7 +76,7 @@ titles = {"mean": "Temporal mean [mm/hour]",
           "perc_99.90": "99.9% percentile [mm/hour]"}
 fig = plt.figure(figsize=(16, 18.5))
 gs = gridspec.GridSpec(4 * 3, 4, left=0.1, bottom=0.1, right=0.9, top=0.9,
-                       hspace=0.12, wspace=0.07,
+                       hspace=0.12, wspace=0.1,
                        height_ratios=[1.0, 0.08, 0.08] * 4)
 for i in range(2):
     for j in range(4):
@@ -101,17 +101,21 @@ for i in range(2):
         cb.ax.tick_params(labelsize=10)
         # ---------------------------------------------------------------------
         ax = plt.subplot(gs[j * 3, (i * 2) + 1], projection=crs_rot)
-        data = res_cdo[var[ind]] - res_py[var[ind]]
-        levels = MaxNLocator(nbins=6, steps=[1, 2, 5, 10], symmetric=True) \
-            .tick_values(np.nanpercentile(data, 10.0),
-                         np.nanpercentile(data, 90.0))
-        cmap = cm.vik
-        norm = mpl.colors.BoundaryNorm(levels, ncolors=cmap.N, extend="both")
+        data = np.abs(res_cdo[var[ind]] - res_py[var[ind]])  # absolute error
+        levels = MaxNLocator(nbins=6, steps=[1, 2, 5, 10], symmetric=False) \
+            .tick_values(0.0, np.nanpercentile(data, 95.0))
+        cmap = cm.lajolla
+        norm = mpl.colors.BoundaryNorm(levels, ncolors=cmap.N, extend="max")
         plt.pcolormesh(rlon, rlat, data, cmap=cmap, norm=norm)
         ax.set_aspect("auto")
         ax.add_feature(cfeature.COASTLINE, linewidth=1.0, color="black")
         ax.add_feature(cfeature.BORDERS, linewidth=1.0, color="black")
         plt.title("CDO - Python", fontsize=12, fontweight="bold")
+        t = plt.text(0.86, 0.92, "{:.1e}".format(np.nanmax(data)),
+                     horizontalalignment="center",
+                     verticalalignment="center",
+                     transform=ax.transAxes, fontsize=10)
+        t.set_bbox(dict(facecolor="white", alpha=1.0, edgecolor="black"))
         # ---------------------------------------------------------------------
         ax = plt.subplot(gs[j * 3 + 1, (i * 2) + 1])
         cb = mpl.colorbar.ColorbarBase(ax, cmap=cmap, norm=norm,

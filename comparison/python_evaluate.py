@@ -9,19 +9,15 @@
 # Load modules
 import os
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import xarray as xr
 import textwrap
-
-mpl.style.use("classic")
 
 # -----------------------------------------------------------------------------
 # Settings
 # -----------------------------------------------------------------------------
 
 # Input names
-files_pattern = "/Users/csteger/Dropbox/IAC/Z_current_work/data_in/" \
+files_pattern = "/Users/csteger/Desktop/data_in/" \
                 + "pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-" \
                 + "COSMO-crCLIM-v1-1_v1_1hr_YYYY01010030-YYYY12312330.nc"
 file_res = "/Users/csteger/Desktop/data_out/" \
@@ -99,9 +95,3 @@ for ind, i in enumerate(qs):
     dev_max = np.abs(prec_per[ind, :, :] - res["perc_" + "%.2f" % i]).max()
     dev_mean = np.abs(prec_per[ind, :, :] - res["perc_" + "%.2f" % i]).mean()
     print("%.2f" % i + ": %.10f" % dev_max + ", %.10f" % dev_mean)
-
-# Plot
-ind = 3
-plt.figure()
-plt.pcolormesh(res["perc_" + "%.2f" % qs[ind]] - prec_per[ind, :, :])
-plt.colorbar()
