@@ -50,7 +50,8 @@ The deviations in the percentiles are caused by the different methods applied to
 
 ![Alt text](https://github.com/ChristianSteger/Media/blob/master/Precipitation_indices_Python_vs_CDO.png?raw=true "Output from python_versus_CDO.py")
 
-- **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results to a different (but more memory-intensive) method implemented in Python that computes indices for a time series in one step.
+- **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results to a different (but more memory-intensive) method implemented in Python
+that computes indices for a time series in one step (and directly applies the function *numpy.percentiles()*).
 
 # References
 - Ban, N., Caillaud, C., Coppola, E. et al. (2021): The first multi-model ensemble of regional climate simulations at kilometer-scale resolution, part I: evaluation of precipitation. Clim Dyn 57, 275–302. https://doi.org/10.1007/s00382-021-05708-w
