@@ -45,15 +45,16 @@ By default, 101 bins are applied. To obtain more accurate results, the bin size 
 - **python_versus_CDO.py**: Compare output from **precipitation_indices.py** with results from the above shell script applying CDO.
 The plot below shows the result for eight precipitation indices computed from a COSMO simulation with a 0.11° grid spacing and derived from hourly data for the period 1979 - 1988.
 The output from **precipitation_indices.py** is shown in the left and the difference to CDO in the right column.
-The comparably larger (and non-random) deviations for *temporal mean* is caused by the slight difference in computing averages over the 10 years (in the Python script, the average is weighted by the number of days in a year).
+The comparably larger (and non-random) deviations for *temporal mean* is caused by the slight difference in computing the average over the 10 years (in the Python script, the average is weighted by the number of days in a year).
 For the *yearly maximum*, the *wet day frequency* and the *intensity*, the deviations are very small (and random).
 For *percentiles*, the deviations are considerably larger and particularly occur in the southern part of the domain (at least for the percentiles in the range of 90% - 99%).
-The deviations in the percentiles are caused by the different methods applied to compute them (Python: consider all individual values, CDO: bin data in 1001 bins).
+The deviations in the percentiles are caused by the different methods applied to compute them (Python: consider all individual values, CDO: aggregate data in 1001 bins).
 
 ![Alt text](https://github.com/ChristianSteger/Media/blob/master/Precipitation_indices_Python_vs_CDO.png?raw=true "Output from python_versus_CDO.py")
 
-- **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results to a different (but more memory-intensive) method implemented in Python
-that computes indices for a time series in one step (and directly applies the function *numpy.percentiles()*).
+- **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results (apart from numerica erros) compared to a simpler (but less efficient) method in Python 
+that computes indices from unpartitioned time series (e.g. by applying the function *numpy.percentiles()* to compute percentiles).
+
 
 # References
 - Ban, N., Caillaud, C., Coppola, E. et al. (2021): The first multi-model ensemble of regional climate simulations at kilometer-scale resolution, part I: evaluation of precipitation. Clim Dyn 57, 275–302. https://doi.org/10.1007/s00382-021-05708-w
