@@ -38,7 +38,7 @@ Select the following options: Project &rarr; CORDEX, Domain &rarr; EUR-11, Exper
 The folder **comparison** contains Python scripts to compare obtained results with other methods:
 
 - **precipitation_indices_CDO.sh**: Compute the same precipitation indices with [CDO](https://code.mpimet.mpg.de/projects/cdo/). This methods is approximately ~7 times slower than applying **precipitation_indices.py**
-(depending on the available CPUs/threads). With CDO, percentiles are estimated by sorting the data into bins (see [CDO Manual](https://code.mpimet.mpg.de/projects/cdo/embedded/cdo.pdf)) to reduce memory consumption.
+(depending on the available number of CPUs/threads). With CDO, percentiles are estimated by sorting the data into bins (see [CDO Manual](https://code.mpimet.mpg.de/projects/cdo/embedded/cdo.pdf)) to reduce memory consumption.
 By default, 101 bins are applied. To obtain more accurate results, the bin size can be increase with e.g. *export CDO_PCTL_NBINS=1001*.
 
 - **python_versus_CDO.py**: Compare output from **precipitation_indices.py** with results from the above shell script applying CDO.
