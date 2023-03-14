@@ -1,10 +1,11 @@
-Accurate and fast way to compute the **precipitation indices**
-- temporal mean
-- maximum yearly daily/hourly precipitation
-- wet day frequency
-- percentiles
+Fast and accurate method to compute the following **precipitation indices** from climate data organised in yearly blocks of NetCDF files:
 
-from climate data organised in yearly blocks of NetCDF files. Daily and hourly temporal frequency can be processed and percentiles can be computed as **all-day/hour** or **wet-day/hour** according to Schär et al. (2016).
+- **temporal mean**
+- **maximum yearly/seasonal daily or hourly precipitation**
+- **wet day frequency**
+- **percentiles**
+
+Daily and hourly temporal input frequencies can be processed and percentiles can be computed as **all-day/hour** or **wet-day/hour** according to Schär et al. (2016).
 Indices can be derived for **entire years** or seasons (**JJA**, **SON**, **DJF**, **MAM**).
 
 To reduce memory consumption, yearly blocks are processed sequentially and the relevant data is kept in memory. To e.g. compute the 90% percentile, the largest 10% of data of a grid cell is kept in memory
