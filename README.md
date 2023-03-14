@@ -45,7 +45,7 @@ By default, 101 bins are applied. To obtain more accurate results, the bin size 
 
 - **python_versus_CDO.py**: Compare output from **precipitation_indices.py** with results from the above shell script applying CDO.
 The plot below shows the result for eight precipitation indices computed from a COSMO simulation with a 0.11° grid spacing and derived from hourly data for the period 1979 - 1988.
-The output from **precipitation_indices.py** is shown in the left and the absolute difference to CDO in the right column. The maximum absolute error occurring in the field is displayed in the upper right of the figure panels.
+The output from **precipitation_indices.py** is shown in the left and the absolute difference (CDO - Python) in the right column. The maximum absolute error occurring in the field is displayed in the upper right of the figure panels.
 The non-random deviations for *temporal mean* are likely caused by the slight difference in computing the average over the 10 years (in the Python script, the average is weighted by the number of days in a year).
 For the *yearly maximum*, the *wet day frequency* and the *intensity*, the deviations are very small (and random) compared to the actual values.
 For *percentiles*, the deviations are considerably larger and particularly occur in the southern part of the domain (at least for the percentiles in the range of 90% - 99%).
