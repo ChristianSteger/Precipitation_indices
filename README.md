@@ -2,7 +2,8 @@ Accurate and fast way to compute the **precipitation indices**
 - temporal mean
 - maximum yearly daily/hourly precipitation
 - wet day frequency
-- percentiles\
+- percentiles
+
 from climate data organised in yearly blocks of NetCDF files. Daily and hourly temporal frequency can be processed and percentiles can be computed as **all-day/hour** or **wet-day/hour** according to Schär et al. (2016).
 Indices can be derived for entire years or seasons (JJA, SON, DJF, MAM).
 
@@ -28,11 +29,9 @@ The script **python_versus_CDO.py** additional requires the packages Matplotlib 
 The example data for the script can be downloaded from [ESGF](https://esgf-data.dkrz.de/search/cordex-dkrz/).
 Select the following options: Project &rarr; CORDEX, Domain &rarr; EUR-11, Experiment &rarr; evaluation, RCM Model &rarr; COSMO-crCLIM-v1-1, Time Frequency &rarr; 1hr, Variable &rarr; pr. Then download the first 10 files:
 
-*pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-crCLIM-v1-1_v1_1hr_197901010030-197912312330.nc*
-
-..
-
-*pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-crCLIM-v1-1_v1_1hr_198801010030-198812312330.nc*
+*pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-crCLIM-v1-1_v1_1hr_197901010030-197912312330.nc*\
+..\
+*pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-crCLIM-v1-1_v1_1hr_198801010030-198812312330.nc*\
 
 # Comparison with different calculation methods
 
