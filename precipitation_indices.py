@@ -63,17 +63,14 @@ unit_con_fac = {"1hr": 3600.0, "day": 1.0}
 # [kg m-2 s-1] and daily data [mm day-1]
 interp_kind = "linear"
 # interpolation method used to compute percentiles. Either "linear" (linear),
-# "previous" (lower) or "next" (higher). The bracket value indicates the
+# "previous" (lower) or "next" (higher). The bracket values indicates the
 # corresponding 'method' in np.percentile(). In Chinita et al. (2021), the
 # method 'higher' is applied (-> see supplementary material)
 block_size_max_in = 2.5  # None, 2.5, 5.0
-# maximal data volume that is read during an opening call (None or value) [GB]
-
-# Important notes:
-# - Opening larger NetCDF files (ca. > 5 GB) can cause the xarray/NetCDF
-#   function to freeze. To avoid this, a maximal value can be specified with
-#   'block_size_max_in'. With 'block_size_max_in = None', all data is loaded in
-#   one step.
+# maximal data volume that is read during an opening call (None or value).
+# With None, all data is read during one call. This option is included because
+# tests revealed that reading larger data volumes in one step is slow or even
+# causes the xarray/NetCDF function to freeze.[GB]
 
 # -----------------------------------------------------------------------------
 # Preprocessing steps
@@ -154,10 +151,8 @@ prec_keep.fill(-999.0)
 print("Size of array 'prec_keep': %.1f" % (prec_keep.nbytes / (10 ** 9))
       + " GB")
 
-# Conversion of input precipitation unit to [mm h-1] or [mm day-1]
-out_unit = {"1hr": "mm h-1", "day": "mm day-1"}
-
 # Loop through years
+out_unit = {"1hr": "mm h-1", "day": "mm day-1"}  # output units
 num_ts_yr = np.empty(len(years), dtype=np.int32)
 for ind, year in enumerate(years):
 
@@ -232,7 +227,7 @@ for ind, year in enumerate(years):
     print("Wet day frequency computed (" + "%.1f" % (time.time() - t_beg)
           + " s)")
 
-    # Update maximal values to compute percentiles later
+    # Update maximal values for percentile computation
     t_beg = time.time()
     if percentile_method == "all":
         aux.update_max_values_all_day(prec_keep, prec, len_y, len_x, num_keep)
