@@ -11,7 +11,7 @@ To reduce memory consumption, yearly blocks are processed sequentially and the r
 and sequentially updated. After all yearly blocks have been processed, the percentile is computed via interpolation. This method is identical to apply the function *numpy.percentile()*. Part of the percentile
 calculation is parallelised with [Numba](http://numba.pydata.org) – the performance of the script depends thus on the available number of CPUs (respectively threads).
 
-# Package dependencies and installation
+# Dependencies and installation
 
 The following Python packages are required to use this repository: NumPy, SciPy, netCDF4, Xarray, Numba.
 First, create a Conda environment with all required Python packages:
