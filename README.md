@@ -52,7 +52,7 @@ The deviations in the percentiles are caused by the different methods applied to
 
 ![Alt text](https://github.com/ChristianSteger/Media/blob/master/Precipitation_indices_Python_vs_CDO.png?raw=true "Output from python_versus_CDO.py")
 
-- **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results (apart from numerica erros) compared to a simpler (but less efficient) method in Python 
+- **python_evaluate.py**: Check that the fast script **precipitation_indices.py** yields identical results (apart from numerical errors) compared to a simpler (but less efficient) method in Python 
 that computes indices from unpartitioned time series (e.g. by applying the function *numpy.percentiles()* to compute percentiles).
 
 

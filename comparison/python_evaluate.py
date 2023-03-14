@@ -1,8 +1,8 @@
 # Description: Check that the fast script 'precipitation_indices.py' yields
 #              identical results (apart from numerical errors) compared to a
-#              different (but more memory-intensive) method implemented in
-#              Python that computes indices from complete time series in one
-#              step.
+#              simpler (but less efficient) method in Python that computes
+#              indices from unpartitioned time series (e.g. by applying the
+#              function 'numpy.percentiles()' to compute percentiles).
 #
 # Author: Christian R. Steger, March 2023
 

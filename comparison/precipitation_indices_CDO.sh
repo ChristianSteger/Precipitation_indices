@@ -1,4 +1,4 @@
-# Description: Compute multiple precipitation indices with CDO
+# Description: Compute precipitation indices with CDO
 #
 # Author: Christian R. Steger, March 2023
 
@@ -14,7 +14,7 @@ t_beg=$(date +%s)
 # Concatenate files and convert to [mm h-1]
 cdo -L -mulc,3600 -cat ${files_pattern} 10y_tmp.nc
 
-# Temporal meam
+# Temporal mean
 cdo -s -L -timmean -yearmean 10y_tmp.nc 10ymean_year_mean.nc
 
 # Wet day frequency (>0.1mm/hour)
