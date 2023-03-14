@@ -22,17 +22,18 @@ conda create -n prec_percentiles -c conda-forge numpy scipy matplotlib netcdf4 x
 ```
 
 and **activate this environment**. In the script **precipitation_indices.py**, the path to the script **auxiliary.py** must then be adjusted. Afterwards, **precipitation_indices.py** can be used.
+The Python scripts in the folder **comparison** additionally require the packages Matplotlib, cartopy and cmcrameri for plotting.
 
-The script **python_versus_CDO.py** additional requires the packages Matplotlib and cartopy for plotting. The script **submit_daint_multithread.sh** allows to submit **precipitation_indices.py** as a job on the CSCS cluster Daint.
+# Usage
 
-# Example data
-
-The example data for the script can be downloaded from [ESGF](https://esgf-data.dkrz.de/search/cordex-dkrz/).
+Example data for the script can be downloaded from [ESGF](https://esgf-data.dkrz.de/search/cordex-dkrz/).
 Select the following options: Project &rarr; CORDEX, Domain &rarr; EUR-11, Experiment &rarr; evaluation, RCM Model &rarr; COSMO-crCLIM-v1-1, Time Frequency &rarr; 1hr, Variable &rarr; pr. Then download the first 10 files:
 
 *pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-crCLIM-v1-1_v1_1hr_197901010030-197912312330.nc*\
 ..\
 *pr_EUR-11_ECMWF-ERAINT_evaluation_r1i1p1_CLMcom-ETH-COSMO-crCLIM-v1-1_v1_1hr_198801010030-198812312330.nc*
+
+The script **submit_daint_multithread.sh** allows to submit **precipitation_indices.py** as a job on the CSCS cluster Daint.
 
 # Comparison with different calculation methods
 
