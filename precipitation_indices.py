@@ -365,6 +365,6 @@ encoding_no_nan = {i: {"_FillValue": None} for i in
                    + list({"rlon", "rlat", "x", "y", "lon", "lat"}
                           .intersection(set(ds.variables)))}
 ds.to_netcdf(path_out + file_out_fp + "_" + fn_add + ".nc",
-             encoding=(encoding_nan | encoding_no_nan))
+             encoding={**encoding_nan, **encoding_no_nan})
 
 print("Total elapsed time: %.1f" % (time.time() - t_beg_tot) + " s")

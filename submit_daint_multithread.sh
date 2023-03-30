@@ -13,5 +13,6 @@
 #SBATCH --error=precipitation_indices.e
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+conda activate prec_percentiles
 
 srun -u python precipitation_indices.py

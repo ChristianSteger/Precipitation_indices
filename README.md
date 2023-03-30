@@ -14,11 +14,11 @@ calculation is parallelised with [Numba](http://numba.pydata.org) – the perfor
 
 # Dependencies and installation
 
-The following Python packages are required to use this repository: NumPy, SciPy, netCDF4, Xarray, Numba.
+The following Python packages are required to use this repository: NumPy, SciPy, netCDF4, Xarray, Dask, Numba.
 First, create a Conda environment with all required Python packages:
 
 ```bash
-conda create -n prec_percentiles -c conda-forge numpy scipy matplotlib netcdf4 xarray numba
+conda create -n prec_percentiles -c conda-forge numpy scipy matplotlib netcdf4 xarray dask numba
 ```
 
 and **activate this environment**. In the script **precipitation_indices.py**, the path to the script **auxiliary.py** must then be adjusted. Afterwards, **precipitation_indices.py** can be used.
